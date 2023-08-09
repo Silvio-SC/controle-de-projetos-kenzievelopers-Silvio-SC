@@ -1,4 +1,4 @@
-import { Client, ClientConfig } from 'pg'
+import { Client, ClientConfig } from "pg"
 import 'dotenv/config'
 
 const databaseConfig = (): ClientConfig => {
