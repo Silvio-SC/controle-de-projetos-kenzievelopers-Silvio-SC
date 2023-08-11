@@ -1,16 +1,21 @@
+import { Request, Response } from "express";
+import { Project } from "../interfaces";
+import { projectsServices } from "../services";
 
 
-const createDev = async (req: Request, res: Response): Promise<Response> => {
-    const developer: Developer = await developersServices.createDeveloper(req.body);
-    return res.status(201).json(developer);
-  };
+const createProject = async (req: Request, res: Response): Promise<Response> => {
+    const project: Project = await projectsServices.createProject(req.body);
+    return res.status(201).json(project);
+};
   
-  const readDev = async (req: Request, res: Response): Promise<Response> => {
-    const developer: Developer = await developersServices.readDeveloper(req);
-    return res.status(200).json(developer);
-  };
-  
-  const updateDev = async (req: Request, res: Response): Promise<Response> => {
-    const developer: Developer = await developersServices.updateDeveloper(req);
-    return res.status(200).json(developer);
-  };
+const readProject = async (req: Request, res: Response): Promise<Response> => {
+    const project: Project = await projectsServices.readProject(req);
+    return res.status(200).json(project);
+};
+
+const updateProject = async (req: Request, res: Response): Promise<Response> => {
+    const project: Project = await projectsServices.updateProject(req);
+    return res.status(200).json(project);
+};
+
+export { createProject, readProject, updateProject }

@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { Developer, DeveloperInfos } from "../interfaces";
 import { developersServices } from "../services/";
+import AppError from "../error";
 
 const createDev = async (req: Request, res: Response): Promise<Response> => {
   const developer: Developer = await developersServices.createDeveloper(req.body);
@@ -23,6 +24,10 @@ const deleteDev = async (req: Request, res: Response): Promise<Response> => {
 };
 
 const addDevInfo = async (req: Request, res: Response): Promise<Response> => {
+  if (!(req.body.preferredOS === ('Windows' || 'Linux') || 'MacOS')) {
+    throw new AppError("Invalid OS option.", 400)
+  }
+
   const devInfoReq = {...req.body, developerId: req.params.id}
   const devInfo: DeveloperInfos = await developersServices.addDeveloperInfos(devInfoReq);
   return res.status(201).json(devInfo);

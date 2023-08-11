@@ -26,21 +26,12 @@ interface Project {
     description: string | null | undefined,
     repository: string,
     startDate: Date | string,
-    endDate: Date | string | null,
+    endDate?: Date | string | null,
     developerId: number | null
 }
 
+type CreateProject = Omit<Project, "id">
 type ProjectResult = QueryResult<Project>
-
-interface CreateProject {
-    name: string,
-    description: string | null | undefined,
-    repository: string,
-    startDate: Date | string,
-    endDate?: Date | string,
-    developerId?: number
-}
-
 
 export { Developer, DeveloperResult, DeveloperCreate,
     DeveloperInfos, DeveloperInfoResult, DeveloperInfoCreate, 

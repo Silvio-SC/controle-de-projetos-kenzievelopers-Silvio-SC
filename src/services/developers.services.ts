@@ -18,19 +18,18 @@ const createDeveloper = async (request: DeveloperCreate): Promise<Developer> => 
 const readDeveloper = async (request: Request): Promise<Developer> => {
     const queryResult: DeveloperResult = await client.query(
         `SELECT
-            "dev"."id" AS "developerId"
-            "dev"."name" AS "developerName"
-            "dev"."email" AS "developerEmail"
-            "devInfo"."developerSince" AS "developerInfoDeveloperSince"
+            "dev"."id" AS "developerId",
+            "dev"."name" AS "developerName",
+            "dev"."email" AS "developerEmail",
+            "devInfo"."developerSince" AS "developerInfoDeveloperSince",
             "devInfo"."preferredOS" AS "developerInfoPreferredOS"
         FROM "developers" AS "dev"
-        JOIN "developerInfos" AS "devInfo"
+        LEFT JOIN "developerInfos" AS "devInfo"
             ON "dev"."id" = "devInfo"."id"
         WHERE "dev"."id" = $1;
         `,
         [request.params.id]
     );
-    
     return queryResult.rows[0];
 };
 
@@ -53,7 +52,7 @@ const updateDeveloper = async (request: Request): Promise<Developer> => {
 
 const deleteDeveloper = async (request: Request): Promise<Developer> => {
     const queryResult: DeveloperResult = await client.query(
-      'DELETE * FROM "developers" WHERE "id" = $1;',
+      'DELETE FROM "developers" WHERE "id" = $1;',
       [request.params.id]
     );
   
@@ -62,16 +61,12 @@ const deleteDeveloper = async (request: Request): Promise<Developer> => {
 
 const addDeveloperInfos = async (request: DeveloperInfoCreate): Promise<DeveloperInfos> => {
     const queryFormat: string = format(
-        `INSERT INTO "developerInfos"
-            ("developerSince", "preferredOS", "developerId")
-        VALUES 
-            ($1, $2, $3)
-        RETURNING *;`,
-        [request.developerSince, request.preferredOS, request.developerId]
-    );
+        'INSERT INTO "developerInfos" (%I) VALUES (%L) RETURNING *;',
+            Object.keys(request),
+            Object.values(request)
+        );
     
     const queryResult: DeveloperInfoResult = await client.query(queryFormat);
-
     return queryResult.rows[0]
 };
 
